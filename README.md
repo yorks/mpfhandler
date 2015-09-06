@@ -80,7 +80,7 @@ Examples
 
 Simple Example
 --------------
-Here is a example demonstrating how to use this module directly (from within
+Here is a example demonstrating how to use this module directly
 ```python
 
     from logging import getLogger, INFO
@@ -96,6 +96,42 @@ Here is a example demonstrating how to use this module directly (from within
     log.setLevel(INFO)
 
     log.info("Here is a very exciting log message, just for you")
+```
+Django Example
+--------------
+```python
+# settings.py
+LOGGING={
+ #...
+ 'handlers':{
+        'custom_mpf_rotate':{
+            'level': 'DEBUG',
+            'class': 'mpfhandler.MultProcTimedRotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/custom_mptf.log'),
+            'when' : 'D', # day, or H for hour
+            #'interval' : 1,  # TODO
+            #'debug' : False, # handler own log
+            'formatter': 'verbose'
+        },
+  },
+ 'loggers':{
+        ...
+        'customapp': {
+            'handlers': ['console', 'custom_mpf_rotate'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        #...
+  }
+
+}
+
+# app/view.py
+import logging
+log=logging.getLogger(__name__)
+log.info('Here is a very exciting log message, just for you')
+
+
 ```
 
 Attention
