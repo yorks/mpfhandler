@@ -36,7 +36,7 @@ on Linux.
 如果有多个脚本或者实例都需要打日志到同一个文件，请一定都要用这个类
 `MultProcTimedRotatingFileHandler`, 因为它是基于文件锁的.
 
-这个类使用了 `portalocker` 去出来多进程之间的文件锁，所以它只支持 *nix 跟 NT 系统，
+这个类使用了 `portalocker` 去处理多进程之间的文件锁，所以它只支持 *nix 跟 NT 系统，
 但是我只测试了在 Linux 下面使用。
 
 
@@ -44,14 +44,18 @@ Why
 ========
 This class fork from `TimedRotatingFileHandler` and `ConcurrentLogHandler`.
 For `TimedRotatingFileHandler` issues:
+
 1. thread safe but not process safe
 2. rotating time is accumulate, this means it deponding the process when to start up.
+
 `ConcurrentLogHandler` is good, but it only rotating by the logfile size.
 
 
 这个类其实是参考了 `TimedRotatingFileHandler`，`ConcurrentLogHandler` 这两个handler,
 为什么要写这个呢？主要是上面提到的这两个都有一些小问题。
+
 `TimedRotatingFileHandler`:
+
 1. 虽然是线程安全，但是并不支持多进程
 2. 轮转的时间是依赖于进程的启动时间，所以会出现轮转点并不是常规的59s.
 
