@@ -8,7 +8,7 @@ from logging.handlers import BaseRotatingHandler
 # sibling module than handles all the ugly platform-specific details of file locking
 from portalocker import lock, unlock, LOCK_EX
 
-__version__  = '0.0.1'
+__version__  = '0.0.2'
 __author__ = "yorks"
 
 
@@ -200,7 +200,7 @@ class MultProcTimedRotatingFileHandler(BaseRotatingHandler):
                 # Try opening the lock file again.  Should we warn() here?!?
                 try:
                     self._openLockFile()
-                except Exception:
+                except :
                     # Don't try to open the stream lock again
                     self.stream_lock = None
                     return
@@ -213,7 +213,7 @@ class MultProcTimedRotatingFileHandler(BaseRotatingHandler):
         try:
             if self.stream_lock and not self.stream_lock.closed:
                 unlock(self.stream_lock)
-        except Exception:
+        except :
             pass
         finally:
             # release thread lock
@@ -292,7 +292,7 @@ class MultProcTimedRotatingFileHandler(BaseRotatingHandler):
                 if self.debug:self._log2mylog('already rotated, skip this proc to rotate!')
                 self.release()
                 return 0
-        except Exception, e:
+        except :
             pass
         # because log is older then self.nextRolloverTime,
         # we need the old log rename to old filename
